@@ -1,0 +1,42 @@
+out
+*.log
+
+# sbt specific
+dist/*
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+.bsp/
+
+# Scala-IDE specific
+.scala_dependencies
+
+## IntelliJ
+*.iml
+.idea
+.idea_modules
+
+## VScode scala metals
+.bloop
+.metals
+.vscode
+
+## eclipse
+.cache
+.classpath
+.project
+.settings
+
+#vim
+tags
+*.swp
+*.un~
+
+## Mac stuff
+.DS_Store
+
+.lib
+.bash_history
+
