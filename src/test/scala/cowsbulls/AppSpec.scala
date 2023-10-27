@@ -20,6 +20,8 @@ class AppSpec extends Specification {
       output must contain("Make a guess")
     }
   }
+
+
   "tell the user when they give invalid input" in {
     var output: List[String] = List.empty
 
@@ -32,8 +34,7 @@ class AppSpec extends Specification {
 
     val ourReadLn = IO.pure("12ee")
     val app: App = new App(ourPrintln, ourReadLn)
-    app.run().unsafeRunSync()
-    output must contain("Please provide a valid number")
+    app.run().unsafeRunSync() must throwA( new RuntimeException("Please provide a valid number"))
   }
 
   "tell the user when they give an incorrect amount of digits" in {
@@ -48,8 +49,7 @@ class AppSpec extends Specification {
 
     val ourReadLn = IO.pure("23")
     val app: App = new App(ourPrintln, ourReadLn)
-    app.run().unsafeRunSync()
-    output must contain("Please provide a 4 digit number")
+    app.run().unsafeRunSync() must throwA( new RuntimeException("Please provide a 4 digit number"))
   }
 
 
