@@ -22,9 +22,9 @@ class App(println : (String) => IO[Unit], readLine: IO[String]) {
 
     } yield ()
 
-    result.attempt.map {
-      case Left(e) => println(e.getMessage)
-      case Right(_) => ()
+    result.attempt.flatMap {
+      case Left(e) => { println(e.getMessage).flatMap( _ => IO.raiseError(e)) }
+      case Right(_) => IO()
     }
   }
 
