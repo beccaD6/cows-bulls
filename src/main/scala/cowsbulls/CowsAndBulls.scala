@@ -1,8 +1,5 @@
 package cowsbulls
 
-//Most often, you need an object to hold methods and values/variables that shall be available without having to first instantiate an instance of some class. for groupign methods
-
-
 object CowsAndBulls {
   val HerdSize = 4
 

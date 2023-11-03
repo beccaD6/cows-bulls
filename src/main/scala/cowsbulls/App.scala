@@ -17,12 +17,13 @@ class App(println : (String) => IO[Unit], readLine: IO[String]) {
       _<- if(res.isCorrect){
         println("correct guess!")
       }  else {
-        println(res.toString())
+        println(res.toString()).flatMap(_=> IO.raiseError(new RuntimeException("incorrect guess")))
       }
 
     } yield ()
 
     result.attempt.flatMap {
+      //print the error now/at this level, note println is an IO and we need to use flatmap to forward the error as a IO.raiseError not IO(IO.raiseError)
       case Left(e) => { println(e.getMessage).flatMap( _ => IO.raiseError(e)) }
       case Right(_) => IO()
     }

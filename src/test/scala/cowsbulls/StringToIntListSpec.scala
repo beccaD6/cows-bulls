@@ -1,6 +1,5 @@
 package cowsbulls
 
-import cats.effect.IO
 import cats.implicits.toBifunctorOps
 import cowsbulls.StringToIntList.stringToIntList
 import org.specs2.mutable.Specification

@@ -81,7 +81,7 @@ class AppSpec extends Specification {
 
     val ourReadLn = IO.pure("1243")
     val app: App = new App(ourPrintln, ourReadLn)
-    app.run().unsafeRunSync()
+    app.run().unsafeRunSync() must throwA( new RuntimeException("incorrect guess"))
     output must contain("bulls: 2, cows: 2")
     output must not contain("correct guess!")
   }
@@ -98,7 +98,7 @@ class AppSpec extends Specification {
 
     val ourReadLn = IO.pure("1230")
     val app: App = new App(ourPrintln, ourReadLn)
-    app.run().unsafeRunSync()
+    app.run().unsafeRunSync() must throwA( new RuntimeException("incorrect guess"))
     output must contain("bulls: 3, cows: 0")
     output must not contain("correct guess!")
   }
@@ -116,7 +116,7 @@ class AppSpec extends Specification {
 
     val ourReadLn = IO.pure("4321")
     val app: App = new App(ourPrintln, ourReadLn)
-    app.run().unsafeRunSync()
+    app.run().unsafeRunSync() must throwA( new RuntimeException("incorrect guess"))
     output must contain("bulls: 0, cows: 4")
     output must not contain("correct guess!")
   }
