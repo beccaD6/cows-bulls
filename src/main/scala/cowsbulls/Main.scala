@@ -10,6 +10,6 @@ object Main extends IOApp{
   }
 
   final def runR(app: App): IO[ExitCode] = {
-    app.run().map(_ => ExitCode.Success).handleErrorWith(_=>runR(app))
+    app.run().attempt.iterateUntil(_.isRight).map(_ => ExitCode.Success)
   }
 }

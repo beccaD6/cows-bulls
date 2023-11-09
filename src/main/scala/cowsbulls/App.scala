@@ -17,7 +17,7 @@ class App(println : (String) => IO[Unit], readLine: IO[String]) {
       _<- if(res.isCorrect){
         println("correct guess!")
       }  else {
-        println(res.toString()).flatMap(_=> IO.raiseError(new RuntimeException("incorrect guess")))
+        println(res.toString())
       }
 
     } yield ()

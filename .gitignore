@@ -40,3 +40,4 @@ tags
 .lib
 .bash_history
 
+/project/target/
