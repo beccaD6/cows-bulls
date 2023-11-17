@@ -14,7 +14,7 @@ class StringToIntListSpec extends Specification {
   "return a left of an error when the string contains non numeric characters" in {
     val res = stringToIntList("12e4")
 
-    res.leftMap(_.getMessage) must beLeft("Please provide a valid number")
+    res.leftMap(_.message) must beLeft("Please provide a valid number")
   }
 }
 
