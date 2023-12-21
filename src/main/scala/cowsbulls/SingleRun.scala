@@ -1,60 +1,58 @@
 package cowsbulls
 
+
+import cats.Monad
 import cats.implicits._
 import cats.effect.{ExitCode, IO}
 import cowsbulls.CowsAndBulls.{HerdSize, cowsBulls}
 import cowsbulls.StringToIntList.stringToIntList
 
-import scala.util.Try
-import scala.util.control.NonFatal
+//tagless final
+class SingleRun[F[_]: Monad](println2: (String) => F[Unit], readLine: F[String], correctAnswer: List[Int]) {
 
-class SingleRun(println: (String) => IO[Unit], readLine: IO[String]) {
+  private def fetchGuessList(): F[Either[AppError, List[Int]]] = {
+    for {
+      _ <- println2("Make a guess")
+      userInput <- readLine
+      _ <- println2(s"your guess was $userInput")
+    } yield stringToIntList(userInput)
+  }
 
-  private def handleResult(result: Either[AppError, CowsAndBullsResult]): IO[Unit] = {
+  private def handleResult(result: Either[AppError, CowsAndBullsResult]): F[Boolean] = {
     result match {
-      case Left(appError) => println(appError.message)
+      case Left(appError) => println2(appError.message).map(_=>false)
       case Right(cowsAndBullsResult) => {
         if (cowsAndBullsResult.isCorrect) {
-          println("correct guess!")
+          println2("correct guess!").map(_=>true)
         } else {
-          println(cowsAndBullsResult.toString())
+          println2(cowsAndBullsResult.toString()).map(_=>false)
         }
       }
     }
   }
 
-  def run(): IO[Boolean] = {
-    val res: IO[Either[AppError, CowsAndBullsResult]] = fetchGuessList().flatMap {
-      errorOrGuessList =>
 
-        val result: Either[AppError, CowsAndBullsResult] = errorOrGuessList.map { guessList =>
-          val actualList = List(1, 2, 3, 4) //IO(randomNumber())
-          cowsBulls(guessList, actualList)
-        }
-        handleResult(result).map( _ => result)
-    }
+  def run(): F[Boolean] = {
 
-    res.map {
-      case Right(cowsAndBulls) => cowsAndBulls.isCorrect
-      case Left(_) => false
-    }
-
-  }
-
-
-  private def fetchGuessList(): IO[Either[AppError, List[Int]]] = {
     for {
-      _ <- println("Make a guess")
-      userInput <- readLine
-      _ <- println(s"your guess was $userInput")
-    } yield stringToIntList(userInput)
+      errorOrGuessList <- fetchGuessList()
+      errorOrCowsBullsResult <- Monad[F].pure(errorOrGuessList.map(guessList => cowsBulls(guessList,correctAnswer)))
+      result <- handleResult(errorOrCowsBullsResult)
+    } yield result
+//   fetchGuessList().flatMap {
+//        errorOrGuessList =>
+//
+//          val result: Either[AppError, CowsAndBullsResult] = errorOrGuessList.map { guessList =>
+//            cowsBulls(guessList, correctAnswer)
+//          }
+//          handleResult(result)
+//    }
+
   }
 
 
-  def randomNumber(): List[Int] = {
-    val list: List[Int] = (0 to 9).toList
-    scala.util.Random.shuffle(list).take(HerdSize)
-  }
+
+
 
 
 }

@@ -18,7 +18,7 @@ class SingleRunSpec extends Specification {
 
     private def runApp(guess: String): IO[List[String]] = for {
       outputRef <- createOutputReference
-      _ <- new SingleRun(createPrintlnFn(outputRef), IO.pure(guess)).run()
+      _ <- new SingleRun(createPrintlnFn(outputRef), IO.pure(guess), List(1,2,3,4)).run()
       output <- outputRef.get
     } yield output
 
